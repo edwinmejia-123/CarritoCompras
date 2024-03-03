@@ -5,6 +5,7 @@ fun main() {
         Producto("Producto 2", 20.0, 3),
         Producto("Producto 3", 30.0, 1)
     )
+    val carrito = Carrito()
     val scanner = Scanner(System.`in`)
     var continuar = true
     while (continuar) {
@@ -15,7 +16,7 @@ fun main() {
         println("4. Salir")
         print("Seleccione una opción: ")
         when (scanner.nextInt()) {
-            1 -> println("Mostrar productos Funcion")
+            1 -> mostrarProductos(productos, carrito, scanner)
             2 -> println("Funcion mostrar carrito")
             3 -> println("Funcion generar factura")
             4 -> {
@@ -27,10 +28,11 @@ fun main() {
     }
 }
 
-fun mostrarProductos(productos: List<Producto>, scanner: Scanner) {
+fun mostrarProductos(productos: List<Producto>, carrito: Carrito, scanner: Scanner) {
     var regresar = false
     while (!regresar) {
         println("\nProductos disponibles:")
+        listarProducto(productos)
 
         println("\n****************************************")
         println("**** 1. Agregar producto al carrito ****")
@@ -72,5 +74,11 @@ fun mostrarCarrito( scanner: Scanner) {
             }
             else -> println("Opción no válida. Intente de nuevo.")
         }
+    }
+}
+
+fun listarProducto(productos: List<Producto>){
+    productos.forEachIndexed { index, producto ->
+        println("${index + 1}. \"${producto.nombre}\", ${producto.precio}, ${producto.cantidadDisponible}")
     }
 }
