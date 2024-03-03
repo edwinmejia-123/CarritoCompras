@@ -1,14 +1,28 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.*
 fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
-
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
+    val productos = listOf(
+        Producto("Producto 1", 10.0, 5),
+        Producto("Producto 2", 20.0, 3),
+        Producto("Producto 3", 30.0, 1)
+    )
+    val scanner = Scanner(System.`in`)
+    var continuar = true
+    while (continuar) {
+        println("\nOpciones principales:")
+        println("1. Mostrar productos")
+        println("2. Mostrar carrito")
+        println("3. Generar factura")
+        println("4. Salir")
+        print("Seleccione una opción: ")
+        when (scanner.nextInt()) {
+            1 -> println("Mostrar productos Funcion")
+            2 -> println("Funcion mostrar carrito")
+            3 -> println("Funcion generar factura")
+            4 -> {
+                println("Gracias por usar la aplicación.")
+                continuar = false
+            }
+            else -> println("Opción no válida. Intente de nuevo.")
+        }
     }
 }
