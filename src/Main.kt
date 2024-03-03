@@ -5,6 +5,7 @@ fun main() {
         Producto("Producto 2", 20.0, 3),
         Producto("Producto 3", 30.0, 1)
     )
+    val carrito = Carrito()
     val scanner = Scanner(System.`in`)
     var continuar = true
     while (continuar) {
@@ -17,7 +18,7 @@ fun main() {
         when (scanner.nextInt()) {
             1 -> println("Mostrar productos Funcion")
             2 -> println("Funcion mostrar carrito")
-            3 -> println("Funcion generar factura")
+            3 -> println(carrito.generarFactura())
             4 -> {
                 println("Gracias por usar la aplicación.")
                 continuar = false
