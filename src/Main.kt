@@ -18,7 +18,7 @@ fun main() {
         when (scanner.nextInt()) {
             1 -> mostrarProductos(productos, carrito, scanner)
             2 -> println("Funcion mostrar carrito")
-            3 -> println("Funcion generar factura")
+            3 -> println(carrito.generarFactura())
             4 -> {
                 println("Gracias por usar la aplicación.")
                 continuar = false
