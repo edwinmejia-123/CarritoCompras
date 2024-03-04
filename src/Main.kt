@@ -17,7 +17,7 @@ fun main() {
         print("Seleccione una opción: ")
         when (scanner.nextInt()) {
             1 -> mostrarProductos(productos, carrito, scanner)
-            2 -> println("Funcion mostrar carrito")
+            2 -> mostrarCarrito(carrito, scanner)
             3 -> println(carrito.generarFactura())
             4 -> {
                 println("Gracias por usar la aplicación.")
@@ -33,7 +33,7 @@ fun mostrarProductos(productos: List<Producto>, carrito: Carrito, scanner: Scann
     while (!regresar) {
         println("\nProductos disponibles:")
         listarProducto(productos)
-
+        print("Ingrese el número del producto: ")
         println("\n****************************************")
         println("**** 1. Agregar producto al carrito ****")
         println("**** 2. Regresar al menú principal  ****")
@@ -41,7 +41,24 @@ fun mostrarProductos(productos: List<Producto>, carrito: Carrito, scanner: Scann
         println("***************************************")
         print("Seleccione una opción: ")
         when (scanner.nextInt()) {
-            1 -> println("Funcion agregar producto al carrito")
+            1 -> {
+                listarProducto(productos)
+                print("Ingrese el número del producto: ")
+                val numProducto = scanner.nextInt()
+                if (numProducto in 1..productos.size) {
+                    val producto = productos[numProducto - 1]
+                    print("Ingrese la cantidad a comprar: ")
+                    var cantidad = scanner.nextInt()
+                    while (cantidad > producto.cantidadDisponible) {
+                        println("No hay suficiente stock para el producto ${producto.nombre}. Cantidad disponible: ${producto.cantidadDisponible}. Ingrese una cantidad válida: ")
+                        cantidad = scanner.nextInt()
+                    }
+                    carrito.agregarProducto(producto.copy(), cantidad)
+                    producto.cantidadDisponible -= cantidad // Disminuir la cantidad disponible del producto
+                } else {
+                    println("Número de producto no válido.")
+                }
+            }
             2 -> regresar = true
             3 -> {
                 println("Gracias por usar la aplicación.")
@@ -52,11 +69,11 @@ fun mostrarProductos(productos: List<Producto>, carrito: Carrito, scanner: Scann
     }
 }
 
-fun mostrarCarrito( scanner: Scanner) {
+fun mostrarCarrito( carrito: Carrito, scanner: Scanner) {
     var regresar = false
     while (!regresar) {
         println("\nProductos seleccionados:")
-        //Mostrar la lista de productos del carrito
+        carrito.mostrarCarrito()
         println("\n***************************************")
         println("****1. Editar cantidad de producto ****")
         println("****2. Eliminar producto             ****")
@@ -65,8 +82,39 @@ fun mostrarCarrito( scanner: Scanner) {
         println("***************************************")
         print("Seleccione una opción: ")
         when (scanner.nextInt()) {
-            1 -> println("Editar cantidad de producto")
-            2 -> println("Eliminar producto")
+            1 -> {
+                carrito.mostrarCarrito()
+                println("Ingrese el número del producto para editar:")
+
+                val numProducto = scanner.nextInt()
+                if (numProducto in 1..carrito.productos.size) {
+                    val producto = carrito.productos[numProducto - 1]
+                    print("Ingrese la nueva cantidad para \"${producto.nombre}\": ")
+                    val cantidad = scanner.nextInt()
+                    if (cantidad > 0) {
+                        carrito.eliminarProducto(producto.nombre)
+                        carrito.agregarProducto(producto, cantidad)
+                    } else if (cantidad <= 0) {
+                        carrito.eliminarProducto(producto.nombre)
+                        println("Producto eliminado del carrito.")
+                    }
+                } else {
+                    println("Número de producto no válido.")
+                }
+            }
+            2 -> {
+                println("Ingrese el número del producto para eliminar:")
+                carrito.mostrarCarrito()
+                val numProducto = scanner.nextInt()
+                if (numProducto in 1..carrito.productos.size) {
+                    val producto = carrito.productos[numProducto - 1]
+                    carrito.eliminarProducto(producto.nombre)
+
+                    println("Producto \"${producto.nombre}\" eliminado del carrito.")
+                } else {
+                    println("Número de producto no válido.")
+                }
+            }
             3 -> regresar = true
             4 -> {
                 println("Gracias por usar la aplicación.")
