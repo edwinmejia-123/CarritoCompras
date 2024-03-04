@@ -34,10 +34,10 @@ class Carrito(val productos: MutableList<Producto> = mutableListOf()) {
         }
         println("Productos en el carrito:")
         var totalGeneral = 0.0
-        productos.forEach { producto ->
+        productos.forEachIndexed {index, producto ->
             val precioTotal = producto.precio * producto.cantidadDisponible
             totalGeneral += precioTotal
-            println("${producto.nombre}, Cantidad: ${producto.cantidadDisponible}, Precio unitario: ${producto.precio}, Precio total: $precioTotal")
+            println("${index + 1}. ${producto.nombre}, Cantidad: ${producto.cantidadDisponible}, Precio unitario: ${producto.precio}, Precio total: $precioTotal")
         }
         println("Total general del carrito: $totalGeneral")
     }

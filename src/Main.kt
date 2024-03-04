@@ -17,7 +17,7 @@ fun main() {
         print("Seleccione una opción: ")
         when (scanner.nextInt()) {
             1 -> mostrarProductos(productos, carrito, scanner)
-            2 -> mostrarCarrito(carrito, scanner)
+            2 -> mostrarCarrito(productos,carrito, scanner)
             3 -> println(carrito.generarFactura())
             4 -> {
                 println("Gracias por usar la aplicación.")
@@ -69,7 +69,7 @@ fun mostrarProductos(productos: List<Producto>, carrito: Carrito, scanner: Scann
     }
 }
 
-fun mostrarCarrito( carrito: Carrito, scanner: Scanner) {
+fun mostrarCarrito(productos: List<Producto>, carrito: Carrito, scanner: Scanner) {
     var regresar = false
     while (!regresar) {
         println("\nProductos seleccionados:")
@@ -85,32 +85,40 @@ fun mostrarCarrito( carrito: Carrito, scanner: Scanner) {
             1 -> {
                 carrito.mostrarCarrito()
                 println("Ingrese el número del producto para editar:")
-
                 val numProducto = scanner.nextInt()
                 if (numProducto in 1..carrito.productos.size) {
-                    val producto = carrito.productos[numProducto - 1]
-                    print("Ingrese la nueva cantidad para \"${producto.nombre}\": ")
-                    val cantidad = scanner.nextInt()
-                    if (cantidad > 0) {
-                        carrito.eliminarProducto(producto.nombre)
-                        carrito.agregarProducto(producto, cantidad)
-                    } else if (cantidad <= 0) {
-                        carrito.eliminarProducto(producto.nombre)
-                        println("Producto eliminado del carrito.")
+                    val productoEnCarrito = carrito.productos[numProducto - 1]
+                    val productoOriginal = productos.find { it.nombre == productoEnCarrito.nombre }!!
+                    print("Ingrese la nueva cantidad para \"${productoEnCarrito.nombre}\": ")
+                    val nuevaCantidad = scanner.nextInt()
+
+                    if (nuevaCantidad > productoOriginal.cantidadDisponible + productoEnCarrito.cantidadDisponible) {
+                        println("No hay suficiente cantidad disponible del producto ${productoOriginal.nombre}.")
+                    } else {
+                        productoOriginal.cantidadDisponible += productoEnCarrito.cantidadDisponible
+                        carrito.eliminarProducto(productoEnCarrito.nombre)
+                        if (nuevaCantidad > 0) {
+                            carrito.agregarProducto(productoOriginal, nuevaCantidad)
+                            productoOriginal.cantidadDisponible -= nuevaCantidad
+                            println("Producto ${productoOriginal.nombre} actualizado con la nueva cantidad.")
+                        } else {
+                            println("Producto ${productoOriginal.nombre} eliminado del carrito.")
+                        }
                     }
                 } else {
                     println("Número de producto no válido.")
                 }
             }
             2 -> {
-                println("Ingrese el número del producto para eliminar:")
                 carrito.mostrarCarrito()
+                println("Ingrese el número del producto para eliminar:")
                 val numProducto = scanner.nextInt()
                 if (numProducto in 1..carrito.productos.size) {
-                    val producto = carrito.productos[numProducto - 1]
-                    carrito.eliminarProducto(producto.nombre)
-
-                    println("Producto \"${producto.nombre}\" eliminado del carrito.")
+                    val productoEnCarrito = carrito.productos[numProducto - 1]
+                    val productoOriginal = productos.find { it.nombre == productoEnCarrito.nombre }!!
+                    productoOriginal.cantidadDisponible += productoEnCarrito.cantidadDisponible
+                    carrito.eliminarProducto(productoEnCarrito.nombre)
+                    println("Producto \"${productoEnCarrito.nombre}\" eliminado del carrito.")
                 } else {
                     println("Número de producto no válido.")
                 }
